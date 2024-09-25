@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Yeni bir kullanıcı adı ve şifre oluşturacağız. Komutların üzerinde ne işe yaradığı yazıyor. Şifre ve kullanıcı adı için şu karakterleri kullanmayın: ; | & $ ` \ ' “ < > ( ) * ? [ ] { } # ~ % !"
 echo "Kullanıcı adınızı giriniz (root kullanmayınız) :"
 read kullanici_adi
 
