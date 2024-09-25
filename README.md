@@ -13,58 +13,10 @@ mkdir ubuntu-desktop
 
 ```ruby
 cd ubuntu-desktop
-nano setup_ubuntudesktop.sh
 ```
-Açılan dosyaya aşağıdaki kod bloğunun en üstünde değişiklik yaparak yapıştıralım. Yeni bir kullanıcı adı ve şifre oluşturacağız. Komutların üzerinde ne işe yaradığı yazıyor. Şifre ve kullanıcı adı için şu karakterleri kullanmayın: ; | & $ ` \ ' “ < > ( ) * ? [ ] { } # ~ % !
-
 ```ruby
-#!/bin/bash
-
-# Uzak masaüstü için kullanıcı ve şifre değişkenlerini tanımlayın
-# Root kullanmayın
-USER="KULLANICI ADI"
-PASSWORD="ŞİFRE"
-
-# Paket listesini günceller
-apt update && apt upgrade -y
-
-# GNOME Masaüstünü yükler
-sudo apt install -y ubuntu-desktop
-
-# Uzak masaüstü sunucusunu (xrdp) kurar
-sudo apt install -y xrdp
-
-# USER kullanıcısını şifreyle ekler
-sudo useradd -m -s /bin/bash $USER
-echo "$USER:$PASSWORD" | sudo chpasswd
-
-# USER kullanıcısını yönetim hakları için sudo grubuna ekler
-sudo usermod -aG sudo $USER
-
-# xrdp'yi GNOME masaüstünü kullanacak şekilde yapılandırır
-echo "gnome-session" > ~/.xsession
-
-# xrdp hizmetini yeniden başlatır
-sudo systemctl restart xrdp
-
-# Başlangıçta xrdp'yi etkinleştirir
-sudo systemctl enable xrdp
-
-# Eğer mevcut değilse Belgeler dizinini oluşturur
-sudo -u $USER mkdir -p /home/$USER/Documents
-
-#Chorme Kurulumu
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install ./google-chrome-stable_current_amd64.deb 
-
-echo "Kurulum tamamlandi. GNOME Desktop, xrdp ve Rivalz.ai rClient Chorme kuruldu. Lutfen VPSFix.sh dosyasini calistiriniz."
-
+wget https://github.com/ErsanAydin/Ubuntu_Desktop/blob/main/setup_ubuntudesktop.sh
 ```
-
-``` CTRL + X ``` tuşlarına ve ```Y ``` tuşuna basalım, ardından ```ENTER``` tuşuna basalım.
-
-Dosyayı kullanılabilir hale getirelim.
-
 ```ruby
 chmod +x setup_ubuntudesktop.sh
 ```
@@ -79,76 +31,7 @@ Port Açalım
 ufw allow 3389
 ```
 
-Tüm kurulumlar yapıldıktan sonra ubuntuda kurulan rclient'lerin dashboard'da görünmesini engelleyen hatayı düzeltelim. ```setup-rivalz``` klasöründen devam ediyoruz.
 
-```ruby
-nano VPSFix.sh
-```
-Aşağıdaki scripti olduğu gibi yapıştıralım.
-
-```ruby
-#!/bin/bash
-
-# Version 1.1
-
-# Hizmet dosyası yolunu tanımlar
-SERVICE_FILE="/etc/systemd/system/default-interface-config.service"
-
-# Komut dosyasının root ayrıcalıklarıyla çalıştırılıp çalıştırılmadığını kontrol eder
-if [ "$EUID" -ne 0 ]; then
-  echo "Lutfen root olarak çaliştirin."
-  exit 1
-fi
-
-# Zaten yüklü değilse ethtool'u yükler
-if ! command -v ethtool &> /dev/null; then
-  echo "ethtool bulunamadi, yukleniyor..."
-  apt-get update
-  apt-get install -y ethtool
-fi
-
-# Varsayılan ağ arayüzünü alır
-DEFAULT_INTERFACE=$(ip route show default | awk '/default/ {print $5}')
-
-# systemd hizmet dosyasını oluşturur
-cat <<EOL > $SERVICE_FILE
-[Unit]
-Description=Configure default network interface
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/sbin/ethtool -s $DEFAULT_INTERFACE speed 1000 duplex full autoneg off
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOL
-
-# Yeni hizmeti tanımak için systemd'yi yeniden yükler
-systemctl daemon-reload
-
-# Hizmetin önyüklemede başlatılmasını sağlar
-systemctl enable default-interface-config.service
-
-# Starts the service immediately
-systemctl start default-interface-config.service
-
-echo "Varsayilan arayuz yapilandirmasi hizmeti $DEFAULT_INTERFACE arayuzune yuklendi ve baslatildi."
-```
-
-``` CTRL + X ``` tuşlarına ve ```Y ``` tuşuna basalım, ardından ```ENTER``` tuşuna basalım.
-Dosyayı kullanılabilir hale getirelim.
-
-```ruby
-chmod +x VPSFix.sh
-```
-
-Şimdi scripti çalıştıralım.
-
-```ruby
-./VPSFix.sh
-```
 
 Kurulum bu kadar. Şimdi Windows uzak Masaüstü programı ile sunucumuca bağlanalım. Sunucumuzun IP adresini giriyoruz.
 
@@ -159,7 +42,6 @@ Script içine yazdığımız kullanıcı adı ve şifresini giriyoruz.
 
 ![image](https://github.com/ruesandora/Rivalz/assets/101149671/75ad52bd-2bfe-427a-9204-b7844b8a4219)
 
-Herşey doğru bir şekilde tamamlandıysa bizi ubuntu masaüstü karşılayacak. Sol üstte ```Activities``` sekmesine basıyoruz. Eğer rıvalz dışında chrome üzerinden eklenti kuracaksanız (nodepay vb.) ```Firefox``` ile chrome indirip eklentileri yükleyebilirsiniz. Rivalz için okla gösterilen yere basıyoruz ve açılan ekranda ```Documents``` klasöründe rclient bizi bekliyoruz. Çift tıklayarak çalıştırabilirsiniz.
 
 ![image](https://github.com/ruesandora/Rivalz/assets/101149671/6c0939f7-a592-46a2-81c7-c376b2fa2a73)
 
