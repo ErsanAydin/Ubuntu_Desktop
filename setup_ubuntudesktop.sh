@@ -4,7 +4,7 @@ echo "Kullanıcı adınızı giriniz (root kullanmayınız) :"
 read kullanici_adi
 
 echo "Parolanızı giriniz: "
-read -s parola
+read parola
 # Uzak masaüstü için kullanıcı ve şifre değişkenlerini tanımlayın
 # Root kullanmayın
 USER="$kullanici_adi"
