@@ -1,10 +1,9 @@
 #!/bin/bash
-echo "Yeni bir kullanıcı adı ve şifre oluşturacağız. Komutların üzerinde ne işe yaradığı yazıyor. Şifre ve kullanıcı adı için şu karakterleri kullanmayın: ; | & $ ` \ ' “ < > ( ) * ? [ ] { } # ~ % !"
 echo "Kullanıcı adınızı giriniz (root kullanmayınız) :"
 read kullanici_adi
 
 echo "Parolanızı giriniz: "
-read parola
+read -s parola
 # Uzak masaüstü için kullanıcı ve şifre değişkenlerini tanımlayın
 # Root kullanmayın
 USER="$kullanici_adi"
