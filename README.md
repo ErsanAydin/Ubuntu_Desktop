@@ -15,7 +15,7 @@ mkdir ubuntu-desktop
 cd ubuntu-desktop
 ```
 ```ruby
-wget https://github.com/ErsanAydin/Ubuntu_Desktop/blob/main/setup_ubuntudesktop.sh
+wget [https://github.com/ErsanAydin/Ubuntu_Desktop/blob/main/setup_ubuntudesktop.sh](https://raw.githubusercontent.com/ErsanAydin/Ubuntu_Desktop/refs/heads/main/setup_ubuntudesktop.sh)
 ```
 ```ruby
 chmod +x setup_ubuntudesktop.sh
